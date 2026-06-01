@@ -1,0 +1,33 @@
+{:entity :pedidos
+ :title "Pedidos"
+ :table "pedidos"
+ :connection :default
+ :rights ["U" "A" "S"]
+ :mode :parameter-driven
+ :menu-order 999
+ :menu-icon "bi bi-table"
+ 
+ :fields [
+          {:id :id :label "ID" :type :hidden}
+          {:id :cliente_id :label "Clientes ID" :type :hidden}
+          {:id :repartidor_id :label "Repartidores ID" :type :hidden}
+          {:id :tipo :label "Tipo" :type :textarea :required? true :placeholder "Tipo..."}
+          {:id :status :label "Status" :type :textarea :required? true :placeholder "Status..."}
+          {:id :total :label "Total" :type :decimal :required? true}
+          {:id :paga_con :label "Paga Con" :type :decimal}
+          {:id :cambio :label "Cambio" :type :decimal}
+          {:id :notas :label "Notas" :type :textarea :placeholder "Notas..."}
+          {:id :created_at :label "Created At" :type :textarea :placeholder "Created At..."}]
+ 
+ :queries {:list "SELECT ped.*, cli.nombre as cliente_nombre, rep.nombre as repartidore_nombre FROM pedidos ped LEFT JOIN clientes cli ON ped.cliente_id = cli.id LEFT JOIN repartidores rep ON ped.repartidor_id = rep.id ORDER BY ped.id DESC"
+           :get "SELECT * FROM pedidos WHERE id = ?"}
+ 
+ :actions {:new true :edit true :delete true}
+ 
+ :subgrids [
+            {:entity :pedido_detalle
+             :title "Pedido Detalle"
+             :foreign-key :pedido_id
+             :icon "bi bi-list-ul"
+             :label "Pedido Detalle"
+             :relationship-type :one-to-many}]}

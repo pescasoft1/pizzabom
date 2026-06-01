@@ -1,0 +1,36 @@
+{:entity :inventario
+ :title "Inventario"
+ :table "inventario"
+ :connection :default
+ :rights ["U" "A" "S"]
+ :mode :parameter-driven
+ :menu-order 999
+ :menu-icon "bi bi-table"
+ 
+ :fields [
+          {:id :id :label "ID" :type :hidden}
+          {:id :nombre :label "Nombre" :type :textarea :required? true :placeholder "Nombre..."}
+          {:id :stock :label "Stock" :type :decimal :required? true}
+          {:id :unidad :label "Unidad" :type :textarea :placeholder "Unidad..."}]
+ 
+ :queries {:list "SELECT * FROM inventario ORDER BY id DESC"
+           :get "SELECT * FROM inventario WHERE id = ?"}
+ 
+ :actions {:new true :edit true :delete true}
+ 
+ :subgrids [
+            {:entity :movimientos_inventario
+             :title "Movimientos Inventario"
+             :foreign-key :inventario_id
+             :icon "bi bi-list-ul"
+             :label "Movimientos Inventario"
+             :relationship-type :one-to-many}
+            {:entity :producto_consumos
+             :title "Productos (via Producto Consumos)"
+             :foreign-key :inventario_id
+             :icon "bi bi-list-ul"
+             :label "Productos (via Producto Consumos)"
+             :relationship-type :many-to-many
+             :through-table :producto_consumos
+             :related-entity :productos
+             :related-fk :producto_id}]}

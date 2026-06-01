@@ -1,0 +1,49 @@
+(ns pizzabom.handlers.despacho.controller
+  (:require
+   [pizzabom.handlers.despacho.model :as model]
+   [pizzabom.handlers.despacho.view  :as view]
+   [pizzabom.layout :refer [application]]
+   [pizzabom.models.util :refer [get-session-id]]
+   [ring.util.response :refer [redirect]]))
+
+;; ---------------------------------------------------------------------------
+;; GET /despacho  — Tabla de Despacho
+;; ---------------------------------------------------------------------------
+
+(defn main
+  [request]
+  (let [title        "Despacho"
+        ok           (get-session-id request)
+        pedidos      (model/get-pedidos-abiertos)
+        repartidores (model/get-repartidores)]
+    (application request title ok nil
+                 (view/despacho-view pedidos repartidores))))
+
+;; ---------------------------------------------------------------------------
+;; POST /despacho/status  — avanzar el estatus de una orden
+;; ---------------------------------------------------------------------------
+
+(defn cambiar-status
+  [request]
+  (let [params    (:params request)
+        pedido-id (try (Long/parseLong (str (:pedido_id params))) (catch Exception _ nil))
+        status    (:status params)]
+    (when (and pedido-id status)
+      (model/cambiar-status! pedido-id status))
+    (redirect "/despacho")))
+
+;; ---------------------------------------------------------------------------
+;; POST /despacho/asignar  — assignar ordenes al repartidor
+;; ---------------------------------------------------------------------------
+
+(defn asignar
+  [request]
+  (let [params        (:params request)
+        repartidor-id (try (Long/parseLong (str (:repartidor_id params))) (catch Exception _ nil))
+        raw-ids       (:pedido_ids params)
+        pedido-ids    (when (and repartidor-id raw-ids)
+                        (->> (if (sequential? raw-ids) raw-ids [raw-ids])
+                             (keep #(try (Long/parseLong (str %)) (catch Exception _ nil)))))]
+    (when (seq pedido-ids)
+      (model/asignar! pedido-ids repartidor-id))
+    (redirect "/despacho")))

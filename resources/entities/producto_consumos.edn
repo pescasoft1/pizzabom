@@ -1,0 +1,21 @@
+{:entity :producto_consumos
+ :title "Producto Consumos"
+ :table "producto_consumos"
+ :connection :default
+ :rights ["U" "A" "S"]
+ :mode :parameter-driven
+ :menu-order 999
+ :menu-hidden true
+ :menu-icon "bi bi-box-seam"
+ 
+ :fields [
+          {:id :id :label "ID" :type :hidden}
+          {:id :producto_id :label "Productos ID" :type :hidden}
+          {:id :inventario_id :label "Inventario ID" :type :hidden}
+          {:id :cantidad :label "Cantidad" :type :decimal :required? true}]
+ 
+ :queries {:list "SELECT pro.*, inv.nombre as inventario_nombre, pro1.nombre as producto_nombre FROM producto_consumos pro LEFT JOIN inventario inv ON pro.inventario_id = inv.id LEFT JOIN productos pro1 ON pro.producto_id = pro1.id ORDER BY pro.id DESC"
+           :get "SELECT * FROM producto_consumos WHERE id = ?"}
+ 
+ :actions {:new true :edit true :delete true}
+}

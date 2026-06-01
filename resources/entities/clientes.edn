@@ -1,0 +1,31 @@
+{:entity :clientes
+ :title "Clientes"
+ :table "clientes"
+ :connection :default
+ :rights ["U" "A" "S"]
+ :mode :parameter-driven
+ :menu-order 999
+ :menu-icon "bi bi-person"
+ 
+ :fields [
+          {:id :id :label "ID" :type :hidden}
+          {:id :nombre :label "Nombre" :type :textarea :required? true :placeholder "Nombre..."}
+          {:id :telefono :label "Telefono" :type :text :required? true :placeholder "Telefono..."}
+          {:id :calle :label "Calle" :type :textarea :placeholder "Calle..."}
+          {:id :colonia :label "Colonia" :type :textarea :placeholder "Colonia..."}
+          {:id :municipio :label "Municipio" :type :textarea :placeholder "Municipio..."}
+          {:id :referencias :label "Referencias" :type :textarea :placeholder "Referencias..."}
+          {:id :activo :label "Activo" :type :textarea :required? true :placeholder "Activo..."}]
+ 
+ :queries {:list "SELECT * FROM clientes ORDER BY id DESC"
+           :get "SELECT * FROM clientes WHERE id = ?"}
+ 
+ :actions {:new true :edit true :delete true}
+ 
+ :subgrids [
+            {:entity :pedidos
+             :title "Pedidos"
+             :foreign-key :cliente_id
+             :icon "bi bi-list-ul"
+             :label "Pedidos"
+             :relationship-type :one-to-many}]}

@@ -1,0 +1,23 @@
+{:entity :movimientos_inventario
+ :title "Movimientos Inventario"
+ :table "movimientos_inventario"
+ :connection :default
+ :rights ["U" "A" "S"]
+ :mode :parameter-driven
+ :menu-order 999
+ :menu-hidden true
+ :menu-icon "bi bi-table"
+ 
+ :fields [
+          {:id :id :label "ID" :type :hidden}
+          {:id :fecha :label "Fecha" :type :textarea :required? true :placeholder "Fecha..."}
+          {:id :inventario_id :label "Inventario ID" :type :hidden}
+          {:id :tipo :label "Tipo" :type :textarea :required? true :placeholder "Tipo..."}
+          {:id :cantidad :label "Cantidad" :type :decimal :required? true}
+          {:id :referencia :label "Referencia" :type :textarea :placeholder "Referencia..."}]
+ 
+ :queries {:list "SELECT mov.*, inv.nombre as inventario_nombre FROM movimientos_inventario mov LEFT JOIN inventario inv ON mov.inventario_id = inv.id ORDER BY mov.id DESC"
+           :get "SELECT * FROM movimientos_inventario WHERE id = ?"}
+ 
+ :actions {:new true :edit true :delete true}
+}
